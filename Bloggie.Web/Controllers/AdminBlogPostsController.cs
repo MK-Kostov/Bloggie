@@ -3,20 +3,20 @@ using Bloggie.Web.Models.ViewModels;
 using Bloggie.Web.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bloggie.Web.Controllers
 {
 	public class AdminBlogPostsController : Controller
 	{
 		private readonly ITagRepository tagRepository;
+		private readonly IBlogPostRepository blogPostRepository;
 
 		public AdminBlogPostsController(ITagRepository tagRepository, IBlogPostRepository blogPostRepository)
 		{
 			this.tagRepository = tagRepository;
-			BlogPostRepository = blogPostRepository;
+			this.blogPostRepository = blogPostRepository;
 		}
-
-		public IBlogPostRepository BlogPostRepository { get; }
 
 		[HttpGet]
 		public async Task<IActionResult> Add()
@@ -51,7 +51,7 @@ namespace Bloggie.Web.Controllers
 
 			// Map Tags from selected tags
 
-			// empty list, push na selected tags
+			// empty list, push  selected tags
 			var selectedTags = new List<Tag>();
 
 			foreach (var selectedTagId in addBlogPostRequest.SelectedTags)
@@ -68,9 +68,19 @@ namespace Bloggie.Web.Controllers
 			// Mapping tags back to domain model
 			blogPost.Tags = selectedTags;
 
-			await BlogPostRepository.AddAsync(blogPost);
+			await blogPostRepository.AddAsync(blogPost);
 
 			return RedirectToAction("Add");
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> List()
+		{
+			// Call the repository
+
+			var blogPosts = await blogPostRepository.GetAllAsync();
+			return View(blogPosts);
+
 		}
 	}
 }

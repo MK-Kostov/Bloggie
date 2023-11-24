@@ -16,7 +16,7 @@ namespace Bloggie.Web.Repositories
 		public async Task<Tag> AddAsync(Tag tag)
 		{
 			await bloggieDbContext.Tags.AddAsync(tag);
-			bloggieDbContext.SaveChanges();
+			await bloggieDbContext.SaveChangesAsync();
 			return tag;
 		}
 
