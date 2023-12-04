@@ -26,16 +26,16 @@
 				@foreach (var tag in Model)
 				{
 					<tr>
-						<td>@tag.ID</td>
+						<td>@tag.Id</td>
 						<td>@tag.Name</td>
 						<td>@tag.DisplayName</td>
 						<td>
 							<a class="btn btn-primary" asp-area="" asp-controller="AdminTags"
 							   asp-action="Edit"
-							   asp-route-id="@tag.ID">Edit</a>
+							   asp-route-id="@tag.Id">Edit</a>
 						</td>
 						<td>
-							<form asp-controller="AdminTags" asp-action="Delete" asp-route-id="@tag.ID">
+							<form asp-controller="AdminTags" asp-action="Delete" asp-route-id="@tag.Id">
 								<button class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">Delete</button>
 							</form>
 						</td>

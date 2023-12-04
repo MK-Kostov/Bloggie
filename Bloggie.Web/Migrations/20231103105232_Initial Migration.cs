@@ -35,20 +35,23 @@ namespace Bloggie.Web.Migrations
                 name: "Tags",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tags", x => x.ID);
+                    table.PrimaryKey("PK_Tags", x => x.Id);
                 });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+			migrationBuilder.DropTable(
+				name: "BlogPostTag");
+
+			migrationBuilder.DropTable(
                 name: "BlogPost");
 
             migrationBuilder.DropTable(

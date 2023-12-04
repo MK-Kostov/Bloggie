@@ -67,7 +67,7 @@ namespace Bloggie.Web.Controllers
 			{
 				var editTagRequest = new EditTagRequest
 				{
-					ID = tag.ID,
+					Id = tag.Id,
 					Name = tag.Name,
 					DisplayName = tag.DisplayName
 				};
@@ -83,7 +83,7 @@ namespace Bloggie.Web.Controllers
 		{
 			var tag = new Tag
 			{
-				ID = editTagRequest.ID,
+				Id = editTagRequest.Id,
 				Name = editTagRequest.Name,
 				DisplayName = editTagRequest.DisplayName
 			};
@@ -96,7 +96,7 @@ namespace Bloggie.Web.Controllers
 			}
 			else
 			{
-				return RedirectToAction("Edit", new { id = editTagRequest.ID });
+				return RedirectToAction("Edit", new { id = editTagRequest.Id });
 			}
 
 		}

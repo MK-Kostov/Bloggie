@@ -22,7 +22,7 @@ namespace Bloggie.Web.Repositories
 
 		public async Task<Tag?> DeleteAsync(Guid id)
 		{
-			var existingTag = await bloggieDbContext.Tags.FirstOrDefaultAsync(x => x.ID == id);
+			var existingTag = await bloggieDbContext.Tags.FirstOrDefaultAsync(x => x.Id == id);
 
 			if (existingTag != null)
 			{
@@ -41,12 +41,12 @@ namespace Bloggie.Web.Repositories
 
 		public async Task<Tag?> GetAsync(Guid id)
 		{
-			return await bloggieDbContext.Tags.FirstOrDefaultAsync(x => x.ID == id);
+			return await bloggieDbContext.Tags.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
 		public async Task<Tag?> UpdateAsync(Tag tag)
 		{
-			var existingTag = await bloggieDbContext.Tags.FirstOrDefaultAsync(x => x.ID == tag.ID);
+			var existingTag = await bloggieDbContext.Tags.FirstOrDefaultAsync(x => x.Id == tag.Id);
 			if (existingTag != null)
 			{
 				existingTag.Name = tag.Name;
