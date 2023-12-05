@@ -82,5 +82,91 @@ namespace Bloggie.Web.Controllers
 			return View(blogPosts);
 
 		}
+
+		[HttpGet]
+		public async Task<IActionResult> Edit(Guid Id)
+		{
+			//Retrieve the result from the repository
+			var blogPost = await blogPostRepository.GetAsync(Id);
+			var tagsDomainModel = await tagRepository.GetAllAsync();
+
+			if (blogPost != null)
+			{
+				//Map the domain model into the view model
+				var model = new EditBlogPostRequest
+				{
+					Id = blogPost.Id,
+					Heading = blogPost.Heading,
+					PageTitle = blogPost.PageTitle,
+					Content = blogPost.Content,
+					Author = blogPost.Author,
+					FeaturedImageUrl = blogPost.FeaturedImageUrl,
+					URLHandle = blogPost.URLHandle,
+					ShortDescription = blogPost.ShortDescription,
+					PublishedDate = blogPost.PublishedDate,
+					Visible = blogPost.Visible,
+					Tags = tagsDomainModel.Select(x => new SelectListItem
+					{
+						Text = x.Name,
+						Value = x.Id.ToString()
+					}),
+					SelectedTags = blogPost.Tags.Select(x => x.Id.ToString()).ToArray()
+				};
+
+				return View(model);
+			}
+
+			// Pass data to view
+			return View(null);
+
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Edit(EditBlogPostRequest editBlogPostRequest)
+		{
+			// map view model back to domain model
+			var blogPostDomainModel = new BlogPost
+			{
+				Id = editBlogPostRequest.Id,
+				Heading = editBlogPostRequest.Heading,
+				PageTitle = editBlogPostRequest.PageTitle,
+				Content = editBlogPostRequest.Content,
+				Author = editBlogPostRequest.Author,
+				ShortDescription = editBlogPostRequest.ShortDescription,
+				FeaturedImageUrl = editBlogPostRequest.FeaturedImageUrl,
+				PublishedDate = editBlogPostRequest.PublishedDate,
+				URLHandle = editBlogPostRequest.URLHandle,
+				Visible = editBlogPostRequest.Visible
+			};
+
+			// Map tags into domain model
+			var selectedTags = new List<Tag>();
+			foreach (var selectedTag in editBlogPostRequest.SelectedTags)
+			{
+				if (Guid.TryParse(selectedTag, out var tag))
+				{
+					var foundTag = await tagRepository.GetAsync(tag);
+
+					if (foundTag != null)
+					{
+						selectedTags.Add(foundTag);
+					}
+				}
+			}
+
+			blogPostDomainModel.Tags = selectedTags;
+
+			// Submit informationto repository to update
+			var updatedBlog = await blogPostRepository.UpdateAsync(blogPostDomainModel);
+
+			if (updatedBlog != null)
+			{
+				//Show success notification
+				return RedirectToAction("Edit");
+			}
+
+			// Show error notification
+			return RedirectToAction("Edit");
+		}
 	}
 }
