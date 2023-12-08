@@ -82,7 +82,7 @@ namespace Bloggie.Web.Controllers
 				ItemsPerPage = 5,
 				PageNumber = id,
 				Count = await blogPostRepository.GetCountAsync(),
-				BlogPosts = await blogPostRepository.GetAllAsync(id, 5)
+				BlogPosts = await blogPostRepository.GetAllWithPagesAsync(id, 5)
 			};
 
 			return View(viewModel);
