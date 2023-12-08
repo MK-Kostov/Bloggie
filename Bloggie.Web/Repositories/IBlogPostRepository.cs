@@ -4,7 +4,9 @@ namespace Bloggie.Web.Repositories
 {
 	public interface IBlogPostRepository
 	{
-		Task<IEnumerable<BlogPost?>> GetAllAsync();
+		Task<IEnumerable<BlogPost?>> GetAllAsync(int page, int itemsPerPage = 6);
+
+		Task<int> GetCountAsync();
 
 		Task<BlogPost?> GetAsync(Guid Id);
 

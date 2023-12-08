@@ -74,12 +74,18 @@ namespace Bloggie.Web.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> List()
+		public async Task<IActionResult> List(int id = 1)
 		{
 			// Call the repository
+			var viewModel = new BlogPostListViewModel
+			{
+				ItemsPerPage = 5,
+				PageNumber = id,
+				Count = await blogPostRepository.GetCountAsync(),
+				BlogPosts = await blogPostRepository.GetAllAsync(id, 5)
+			};
 
-			var blogPosts = await blogPostRepository.GetAllAsync();
-			return View(blogPosts);
+			return View(viewModel);
 
 		}
 

@@ -34,10 +34,15 @@ namespace Bloggie.Web.Repositories
 			return null;
 		}
 
-		public async Task<IEnumerable<BlogPost?>> GetAllAsync()
+		public async Task<IEnumerable<BlogPost?>> GetAllAsync(int page, int itemsPerPage = 6)
 		{
-			return await bloggieDbContext.BlogPost.Include(x => x.Tags).ToListAsync();
+			return await bloggieDbContext.BlogPost.Include(x => x.Tags).Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToListAsync();
 
+		}
+
+		public async Task<int> GetCountAsync()
+		{
+			return await bloggieDbContext.BlogPost.CountAsync();
 		}
 
 		public async Task<BlogPost?> GetAsync(Guid Id)
