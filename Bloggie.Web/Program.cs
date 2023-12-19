@@ -1,5 +1,6 @@
 using Bloggie.Web.Data;
 using Bloggie.Web.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<BloggieDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BloggieDbConnectionString")));
+builder.Services.AddDbContext<BloggieDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("BloggieDbConnectionString")));
+
+builder.Services.AddDbContext<AuthDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("BloggieAuthDbConnectionString")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+	.AddEntityFrameworkStores<AuthDbContext>();
 
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
@@ -28,6 +36,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthorization();
 app.UseAuthorization();
 
 app.MapControllerRoute(
