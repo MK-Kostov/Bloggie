@@ -25,13 +25,22 @@
 				<div class="mb-3">
 					@if (signInManager.IsSignedIn(User))
 					{
-						<a id="btnLike" cursor: pointer>
-							<i class="bi bi-hand-thumbs-up"></i>
-						</a>
+						if (Model.Liked)
+						{
+							<a id="btnLike" style="cursor: pointer">
+								<i class="bi bi-hand-thumbs-up-fill"></i>
+							</a>
+						}
+						else
+						{
+							<a id="btnLike" style="cursor: pointer">
+								<i class="bi bi-hand-thumbs-up"></i>
+							</a>
+						}
 					}
 
 
-					<span>@Model.TotalLikes</span> Likes
+					<span id="totalLikes">@Model.TotalLikes</span> Likes
 				</div>
 
 				<div class="mb-3 d-flex">
@@ -58,6 +67,19 @@
 @section Scripts {
 	<script>
 		const btnLikeElement = document.getElementById('btnLike');
+		const totalLikeElement = document.getElementById('totalLikes');
+
+		async function getTotalLikes() {
+			fetch('/api/blogpostlike/@Model.Id/totalLikes', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': '*/*'
+				}
+			})
+				.then(data => data.json())
+				.then(result => totalLikeElement.innerHTML = result);
+		}
 
 		async function addLikeForBlog() {
 			fetch('/api/BlogPostLike/Add', {
@@ -70,7 +92,11 @@
 					blogPostId: '@Model.Id',
 					userId: '@userManager.GetUserId(User)'
 				})
-			}).then(console.log('Request finished'));
+			}).then(() => {
+				btnLikeElement.innerHTML = '<i class="bi bi-hand-thumbs-up-fill"></i>';
+				btnLikeElement.removeEventListener('click', addLikeForBlog);
+				getTotalLikes();
+			});
 		}
 
 		btnLikeElement.addEventListener('click', addLikeForBlog);
