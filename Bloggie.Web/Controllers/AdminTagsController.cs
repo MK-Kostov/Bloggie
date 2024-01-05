@@ -30,6 +30,11 @@ namespace Bloggie.Web.Controllers
 		//public  IActionResult Add(AddTagRequest addTagRequest)
 		public async Task<IActionResult> Add(AddTagRequest addTagRequest)
 		{
+
+			if (ModelState.IsValid == false)
+			{
+				return View();
+			}
 			// Mapping AddTagRequest to Tag domain model
 			var tag = new Tag
 			{
